@@ -1,6 +1,24 @@
 {% extends 'accounts/main.html' %} <!--cho child template inherit base template -->
-{% block content %}
+{% block content %} <!--child template phải nằm trong đây-->
+		<br>
 
-    <h1>Products</h1> <!--child template phải nằm trong đây-->
+		<div class="row">
+			<div class="col-md">
+				<div class="card card-body">
+					<h5>Products</h5> 
+				</div>
+				<div class="card card-body">
+					<table class="table"> <!--tạo 1 bảng gồm các trường sau-->
+						<tr>
+							<th>Product</th>
+							<th>Category</th>
+							<th>Price</th>
+						</tr>
+						
+					</table>
+				</div>
+			</div>
+			
+		</div>
 
-{% endblock %}
+{% endblock content %}
