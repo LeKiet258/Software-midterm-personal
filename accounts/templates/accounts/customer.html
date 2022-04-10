@@ -59,16 +59,16 @@
 					<th>Remove</th>
 				</tr>
 
-				{% for ord in orders %}
+				{% for order in orders %}
 				<tr>
-					<td>{{ord.product}}</td>
-					<td>{{ord.product.category}}</td>
-					<td>{{ord.date_created}}</td>
-					<td>{{ord.status}}</td>
+					<td>{{order.product}}</td>
+					<td>{{order.product.category}}</td>
+					<td>{{order.date_created}}</td>
+					<td>{{order.status}}</td>
 
 					<!--create buttons-->
-					<td><a class='btn btn-sm btn-info' href="">Update</a></td>
-					<td><a class='btn btn-sm btn-danger' href="">Remove</a></td>
+					<td><a class="btn btn-sm btn-info" href="{% url 'update_order' order.id %}">Update</a></td>
+					<td><a class="btn btn-sm btn-danger" href="{% url 'delete_order' order.id %}">Delete</a></td>
 				</tr>
 				{% endfor %}
 

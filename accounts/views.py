@@ -1,7 +1,9 @@
 # Create your views here.
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from matplotlib.style import context
 from .models import *
+from .forms import OrderForm    
 
 # home page
 def home(request):
@@ -31,3 +33,42 @@ def customer(request, pk):
     context = {'customer': customer, 'orders': orders, 'order_count': order_count}
     
     return render(request, 'accounts/customer.html', context) 
+
+def create_order(request):
+    form = OrderForm()
+   
+    # quy trình save changes
+    if request.method == 'POST':
+        form = OrderForm(request.POST) # pass the info to 'OrderForm' object to handle
+        if form.is_valid():
+            form.save() # save the info passed in to the DB
+            return redirect('/') # send us back to the 'main' template
+        
+    context = {'form': form}
+    return render(request, 'accounts/order_form.html', context)
+
+def update_order(request, pk):
+    order = Order.objects.get(id=pk)
+    form = OrderForm(instance=order) # prefill a form bằng cách thao tác với tham số 'instance'. Còn hiểu theo kiểu: create form from an existing order 
+    
+    # quy trình save changes
+    if request.method == 'POST':
+        form = OrderForm(request.POST, instance=order) # save changes to THAT instance (i.e. 'order')
+        if form.is_valid():
+            form.save() 
+            return redirect('/') 
+    
+    context = {'form': form}
+    
+    return render(request, 'accounts/order_form.html', context)
+
+def delete_order(request, pk):
+    order = Order.objects.get(id=pk)
+    
+    # quy trình delete
+    if request.method == 'POST':
+        order.delete()
+        return redirect('/') 
+    
+    context={'item': order}
+    return render(request, 'accounts/delete.html', context)
