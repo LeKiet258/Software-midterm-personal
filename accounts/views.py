@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from matplotlib.style import context
 from .models import *
+from django.forms import inlineformset_factory
 from .forms import OrderForm    
 
 # home page
@@ -34,17 +35,21 @@ def customer(request, pk):
     
     return render(request, 'accounts/customer.html', context) 
 
-def create_order(request):
-    form = OrderForm()
+def create_order(request, pk):
+    OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'status'), extra=10) # [parent model, child model]
+    customer = Customer.objects.get(id=pk)
+    # 'queryset': tránh reference tới thông tin order cũ khi đặt hàng mới
+    formset = OrderFormSet(queryset = Order.objects.none() ,instance=customer)
    
-    # quy trình save changes
+    # xử lý sau khi bấm nút 'Submit' để đặt hàng
     if request.method == 'POST':
-        form = OrderForm(request.POST) # pass the info to 'OrderForm' object to handle
-        if form.is_valid():
-            form.save() # save the info passed in to the DB
+        # form = OrderForm(request.POST) # pass the info to 'OrderForm' object to handle
+        formset = OrderFormSet(request.POST, instance=customer)
+        if formset.is_valid():
+            formset.save() # save the info passed in to the DB
             return redirect('/') # send us back to the 'main' template
         
-    context = {'form': form}
+    context = {'formset': formset}
     return render(request, 'accounts/order_form.html', context)
 
 def update_order(request, pk):
