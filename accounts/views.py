@@ -6,8 +6,22 @@ from .models import *
 from django.forms import inlineformset_factory
 from .forms import OrderForm    
 from .filters import OrderFilter
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 
-# home page
+def register_page(request):
+    form = UserCreationForm()
+    context = {'form': form}
+    return render(request, 'accounts/register.html', context)
+
+def login_page(request):
+    context = {}
+    return render(request, 'accounts/login.html', context)
+
+def logout_user(request):
+	logout(request)
+	return redirect('login')
+
 def home(request):
     orders = Order.objects.all()
     customers = Customer.objects.all()
@@ -80,3 +94,4 @@ def delete_order(request, pk):
     
     context={'item': order}
     return render(request, 'accounts/delete.html', context)
+
