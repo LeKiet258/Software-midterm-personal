@@ -16,9 +16,11 @@ Including another URLconf
 # đây là nơi user nhập vào url, và file này phải return back a page
 from django.contrib import admin
 from django.urls import path, include
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')) # gọi tới urls.py trong folder accounts, qui trình gọi: urls.py (crm1) -> urls.py (accounts) -> views.py (accounts)
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

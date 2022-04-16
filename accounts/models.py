@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models (bảng - table trong sql) here.
 # LƯU Ý: sau khi tạo 1 model mới thì cần 'python manage.py makemigrations' để tạo bảng (create table)
@@ -6,11 +7,13 @@ from django.db import models
 ## và nhớ register model trong admin.py để thêm bảng lên web (front-end) 
 
 class Customer(models.Model):
+	user = models.OneToOneField(User, blank=True, null=True, on_delete=models.CASCADE) # a user can have 1 customer, a customer have a user
 	name = models.CharField(max_length=200, null=True) # 'null' cho phép nhập data có trường bị thiếu
 	phone = models.CharField(max_length=200, null=True)
 	email = models.CharField(max_length=200, null=True)
 	date_created = models.DateTimeField(auto_now_add=True, null=True)
-
+	profile_pic = models.ImageField(default="profile1.png", null=True, blank=True)
+ 
 	def __str__(self):
 		return self.name
 

@@ -9,6 +9,7 @@ urlpatterns = [
     
     path('', views.home, name="home"), # [base page, view connect to the base page]
     path('user/', views.userPage, name="user-page"),
+    path('account/', views.accountSettings, name="account"),
     path('products/', views.products, name="products"),
     path('customer/<str:pk>/', views.customer, name="customer"), # this url is dynamic
     

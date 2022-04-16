@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from matplotlib.style import context
 from .models import *
 from django.forms import inlineformset_factory
-from .forms import OrderForm, CreateUserForm
+from .forms import *
 from .filters import OrderFilter
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
@@ -25,7 +25,12 @@ def register_page(request):
             # automatically assign users signing up as a customer
             group = Group.objects.get(name='customer')
             user.groups.add(group) # associate a user with a group
-            
+            # Added username because of error returning customer name if not added
+            Customer.objects.create(
+				user=user,
+				name=user.username,
+			)
+   
             messages.success(request, 'Account was created for' + username)
             return redirect('login')
     context = {'form': form}
@@ -68,9 +73,31 @@ def home(request):
     # tìm tới nơi mô tả cách 'Dashboard' (nơi này còn gọi là 'template') dc hiển thị lên màn hình & render nó
     return render(request, 'accounts/dashboard.html', context)  # render() làm cho chữ đẹp hơn (bằng việc tuân theo format htm)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
 def userPage(request):
-	context = {}
-	return render(request, 'accounts/user.html', context)
+    orders = request.user.customer.order_set.all() # get orders of a user
+    total_orders = orders.count()
+    delivered = orders.filter(status='Delivered').count()
+    pending = orders.filter(status='Pending').count()
+    
+    context = {'orders': orders, 'total_orders': total_orders, 
+               'delivered': delivered, 'pending': pending}
+    return render(request, 'accounts/user.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def accountSettings(request):
+	customer = request.user.customer
+	form = CustomerForm(instance=customer)
+
+	if request.method == 'POST':
+		form = CustomerForm(request.POST, request.FILES, instance=customer)
+		if form.is_valid():
+			form.save()
+
+	context = {'form':form}
+	return render(request, 'accounts/account_settings.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
