@@ -1,6 +1,14 @@
 <!--source: https://getbootstrap.com/docs/4.0/components/navbar/ -->
 {% load static %}
 
+<style>
+  .hello-msg{
+    font-size: 18px;
+    color: #fff;
+    margin-right: 20px;
+  }
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     {% comment %} <a class="navbar-brand" href="#">Navbar</a> {% endcomment %}
     <img src="{% static 'images/logo.png' %}" style="width: 40px; min-width: 3px;"/>
@@ -35,4 +43,8 @@
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form>
     </div>
+
+    <span class="hello-msg">Hello, {{request.user}}</span>
+    <span ><a class="hello-msg" href="{% url 'logout' %}">Logout</a></span> <!--khi click vào nút 'Logout' thì send back về url 'logout'-->
+
   </nav>
