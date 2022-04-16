@@ -16,9 +16,10 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-  
+    
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
+        {% if request.user.is_staff %} <!--if user is staff, go ahead & show Dashboard + Products-->
         <li class="nav-item active">
           <!--specify 'href', như vậy chỉ cần click vào 'Products'/'Dashboard' trên navbar, đỡ type-->
           <a class="nav-link" href="{% url 'home' %}">Dashboard</a>
@@ -37,6 +38,7 @@
             <a class="dropdown-item" href="#">Something else here</a>
           </div>
         </li>
+        {% endif %}
       </ul>
       <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
