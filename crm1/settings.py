@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'accounts', # let the project know 'be aware of this app, we're now connected'
+    'accounts.apps.AccountsConfig', # let the project know 'be aware of this app, we're now connected'
     'django_filters'
 ]
 
